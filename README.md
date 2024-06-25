@@ -15,10 +15,16 @@ Este proyecto es una aplicación web en Django que permite a los usuarios ingres
    git clone https://github.com/RichardAri/ProyectoSistemasInteligentes
    cd ProyectoSistemasInteligentes
 
-2. virtualenv venv
+2. Crear entorno virtual
+    ```bash
+    virtualenv venv
     source venv/bin/activate
 
-3. pip install -r requirements.txt
+3. instala las dependencias
+    ```bash
+    pip install -r requirements.txt
 
-4. python manage.py runserver
+4. corre el servidor 
+    ```bash
+    python manage.py runserver
 
