@@ -81,8 +81,6 @@ textarea {
 }
 
 /* Resultados */
-
-/* Resultados Styles */
 #resultados {
     max-width: 800px;
     margin: 50px auto;
@@ -100,7 +98,7 @@ textarea {
 }
 
 .resultado-item {
-    flex: 1 1 calc(100% - 20px);
+    flex: 1 1 calc(33% - 20px);
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -108,6 +106,7 @@ textarea {
     overflow: hidden;
     transition: transform 0.3s ease;
     text-align: center;
+    padding: 10px;
 }
 
 .resultado-item:hover {

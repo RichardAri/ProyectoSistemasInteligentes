@@ -19,14 +19,18 @@
             <input class="btn-input" type="button" value="Registra una Mascota">
         </div>
     </div>
-    <div id="results-container">
-        {% for result in results %}
-            <div class="resultado-item">
-                <h3>{{ result.name }}</h3>
-                <img src="{{ result.image }}" alt="{{ result.name }} image">
-                <!-- Aquí puedes agregar más detalles de la raza -->
-            </div>
-        {% endfor %}
+    <div id="resultados">
+        <div id="resultados-lista">
+            {% for result in results %}
+                <div class="resultado-item">
+                    <h3>{{ result.nombre }}</h3>
+                    <img src="{{ result.imagen }}" alt="{{ result.nombre }} image">
+                    <p><strong>Tamaño:</strong> {{ result.tamaño }}</p>
+                    <p><strong>Cuidados del pelaje:</strong> {{ result.cuidados }}</p>
+                    <p><strong>Nivel de actividad:</strong> {{ result.actividad }}</p>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>
