@@ -26,8 +26,11 @@
                     <h3>{{ result.nombre }}</h3>
                     <img src="{{ result.imagen }}" alt="{{ result.nombre }} image">
                     <p><strong>Tamaño:</strong> {{ result.tamaño }}</p>
-                    <p><strong>Cuidados del pelaje:</strong> {{ result.cuidados }}</p>
-                    <p><strong>Nivel de actividad:</strong> {{ result.actividad }}</p>
+                    <p><strong>Tipo de pelo:</strong> {{ result.tipo_de_pelo }}</p>
+                    <p><strong>Temperamento:</strong> {{ result.temperamento }}</p>
+                    <p><strong>Mantenimiento:</strong> {{ result.mantenimiento }}</p>
+                    <p><strong>Nivel de actividad:</strong> {{ result.nivel_de_actividad }}</p>
+                    <p><strong>Cuidados necesarios:</strong> {{ result.cuidados }}</p>
                 </div>
             {% endfor %}
         </div>
