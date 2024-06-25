@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdoptaMascotasAQP - Encuentra a tu amigo peludo ideal</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"/>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navitem">
+            <input class="btn-input" type="button" value="Adopta a tu compañero ideal">
+        </div>
+        <div class="navitem">
+            <h1 class="title">AdoptaMascotasAQP</h1>
+        </div>
+        <div class="navitem">
+            <input class="btn-input" type="button" value="Registra una Mascota">
+        </div>
+    </div>
+    <form method="POST" action="{% url 'index' %}">
+        {% csrf_token %}
+        <div class="form_input">
+            <h2>Describe a tu mascota ideal:</h2>
+            <textarea id="user-prompt" name="user_prompt"></textarea>
+        </div>
+        <div>
+            <input id="generate-button" class="btn-input btn-buscar" type="submit" value="Busca a tu compañero">
+        </div>
+    </form>
+    <div id="results-container"></div>
+</body>
+</html>

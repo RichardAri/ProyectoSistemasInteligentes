@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de búsqueda</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="navbar">
+        <div class="navitem">
+            <input class="btn-input" type="button" value="Adopta a tu compañero ideal">
+        </div>
+        <div class="navitem">
+            <h1 class="title">AdoptaMascotasAQP</h1>
+        </div>
+        <div class="navitem">
+            <input class="btn-input" type="button" value="Registra una Mascota">
+        </div>
+    </div>
+    <div id="results-container">
+        {% for result in results %}
+            <div class="resultado-item">
+                <h3>{{ result.name }}</h3>
+                <img src="{{ result.image }}" alt="{{ result.name }} image">
+                <!-- Aquí puedes agregar más detalles de la raza -->
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
