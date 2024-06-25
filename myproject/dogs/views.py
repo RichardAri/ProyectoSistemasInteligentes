@@ -13,6 +13,9 @@ model = genai.GenerativeModel('gemini-pro')
 with open(os.path.join(settings.BASE_DIR, 'dogs/static/raza_map.json')) as f:
     raza_map = json.load(f)
 
+# Configura la API de Unsplash
+UNSPLASH_ACCESS_KEY = 'aP0JimG9USmtdmHfcwNwM0myO3mIxvt2Q_ICFAyMwas'  # Reemplaza con tu Access Key de Unsplash
+
 def index(request):
     return render(request, 'index.html')
 
@@ -75,17 +78,8 @@ def obtener_razas(descripcion):
                 'mantenimiento': mantenimiento,
                 'nivel_de_actividad': nivel_de_actividad,
                 'cuidados': cuidados,
-                'imagen': ''
+                'imagen': obtener_imagen_perro(nombre_raza)
             }
-
-            try:
-                raza_url = raza_map.get(nombre_raza, nombre_raza.replace(" ", "/"))
-                imagen_url = f"https://dog.ceo/api/breed/{raza_url}/images/random"
-                imagen_response = requests.get(imagen_url)
-                imagen_data = imagen_response.json()
-                raza_actual['imagen'] = imagen_data.get('message', '')
-            except Exception as e:
-                print(f"Error obteniendo la imagen de la raza: {raza_actual['nombre']}. Error: {e}")
 
             razas.append(raza_actual)
 
@@ -95,3 +89,14 @@ def obtener_razas(descripcion):
         print(f"Error al obtener datos de Gemini: {e}")
         return []
 
+def obtener_imagen_perro(raza):
+    try:
+        url = f"https://api.unsplash.com/search/photos?query={raza}&client_id={UNSPLASH_ACCESS_KEY}"
+        response = requests.get(url)
+        data = response.json()
+        if data['results']:
+            return data['results'][0]['urls']['small']
+        return ''
+    except Exception as e:
+        print(f"Error obteniendo la imagen de la raza: {raza}. Error: {e}")
+        return ''
