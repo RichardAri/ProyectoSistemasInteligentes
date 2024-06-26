@@ -3,18 +3,13 @@ import google.generativeai as genai
 import requests
 from django.conf import settings
 import json
-import os
 
 # Configura la API de Gemini
 genai.configure(api_key=settings.GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
-# Cargar el mapeo de razas desde el archivo JSON
-with open(os.path.join(settings.BASE_DIR, 'dogs/static/raza_map.json')) as f:
-    raza_map = json.load(f)
-
 # Configura la API de Unsplash
-UNSPLASH_ACCESS_KEY = 'aP0JimG9USmtdmHfcwNwM0myO3mIxvt2Q_ICFAyMwas'  # Reemplaza con tu Access Key de Unsplash
+UNSPLASH_ACCESS_KEY = settings.UNSPLASH_ACCESS_KEY  # Reemplaza con tu Access Key de Unsplash
 
 def index(request):
     return render(request, 'index.html')
@@ -28,7 +23,7 @@ def resultados(request):
 
 def obtener_razas(descripcion):
     try:
-        # Llama a Gemini para obtener las razas de perros recomendadas
+        # Mejora del prompt con instrucciones más específicas
         prompt = (
             f"Con base en la siguiente descripción del perro ideal: {descripcion}, "
             "proporciona una lista de al menos 4 razas de perros en el siguiente formato JSON:\n"
@@ -43,7 +38,9 @@ def obtener_razas(descripcion):
             "    \"cuidados\": \"Cuidados necesarios\"\n"
             "  }\n"
             "]\n"
+            "Por favor, asegúrate de incluir detalles sobre el tamaño, el tipo de pelo, el temperamento, el mantenimiento, el nivel de actividad y los cuidados necesarios para cada raza."
         )
+        print(f"Prompt enviado a Gemini: {prompt}")  # Imprime el prompt para depuración
         response = model.generate_content(prompt)
         print(response)  # Imprime la estructura completa de la respuesta para depuración
 
@@ -53,12 +50,15 @@ def obtener_razas(descripcion):
         # Accede correctamente al contenido dentro de 'parts'
         texto_respuesta = response.candidates[0].content.parts[0].text.strip()
 
-        # Extraer el JSON del bloque de código Markdown
-        if texto_respuesta.startswith('```json') and texto_respuesta.endswith('```'):
-            texto_respuesta = texto_respuesta[7:-3].strip()
+        # Extraer el JSON del bloque de código Markdown, si es necesario
+        if texto_respuesta.startswith('```') and texto_respuesta.endswith('```'):
+            texto_respuesta = texto_respuesta.strip('``` JSON\n').strip('```')
 
-        # Parsear el JSON de la respuesta
-        razas_recomendadas = json.loads(texto_respuesta)
+        # Verifica si la respuesta contiene información válida en formato JSON
+        try:
+            razas_recomendadas = json.loads(texto_respuesta)
+        except json.JSONDecodeError:
+            raise ValueError("La respuesta de Gemini no contiene un JSON válido.")
 
         razas = []
         for raza in razas_recomendadas:
@@ -91,11 +91,13 @@ def obtener_razas(descripcion):
 
 def obtener_imagen_perro(raza):
     try:
-        url = f"https://api.unsplash.com/search/photos?query={raza}&client_id={UNSPLASH_ACCESS_KEY}"
+        query = f"{raza} dog"
+        url = f"https://www.googleapis.com/customsearch/v1?q={query}&searchType=image&key={settings.GOOGLE_API_KEY}&cx={settings.GOOGLE_CX}"
         response = requests.get(url)
         data = response.json()
-        if data['results']:
-            return data['results'][0]['urls']['small']
+        print(data)  # Depuración: Imprime los datos obtenidos de Google Custom Search
+        if 'items' in data:
+            return data['items'][0]['link']  # Devuelve el enlace de la primera imagen
         return ''
     except Exception as e:
         print(f"Error obteniendo la imagen de la raza: {raza}. Error: {e}")

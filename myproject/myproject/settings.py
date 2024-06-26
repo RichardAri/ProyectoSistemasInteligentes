@@ -14,6 +14,11 @@ from pathlib import Path
 import os
 
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'AIzaSyCNA3F7Do6BjagD4nMKD5_sCCBNAX2MxOY')
+# settings.py
+
+GOOGLE_API_KEY = 'AIzaSyCLH49N0YKaJj4urPG65OAWA0_pXmLGf2Q'
+GOOGLE_CX = '32fc371f91a5e4921'
+UNSPLASH_ACCESS_KEY = 'aP0JimG9USmtdmHfcwNwM0myO3mIxvt2Q_ICFAyMwas'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
