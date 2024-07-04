@@ -4,12 +4,12 @@ import requests
 from django.conf import settings
 import json
 
-# Configura la API de Gemini
+# Asignacion y configuracion de la API de Gemini
 genai.configure(api_key=settings.GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
-# Configura la API de Unsplash
-UNSPLASH_ACCESS_KEY = settings.UNSPLASH_ACCESS_KEY  # Reemplaza con tu Access Key de Unsplash
+# Asignacion de la API de Unsplash
+UNSPLASH_ACCESS_KEY = settings.UNSPLASH_ACCESS_KEY 
 
 def index(request):
     return render(request, 'index.html')
@@ -23,7 +23,7 @@ def resultados(request):
 
 def obtener_razas(descripcion):
     try:
-        # Mejora del prompt con instrucciones más específicas
+        # Prompt para generar los resultados en base a la descripcion del usuario en formato JSON
         prompt = (
             f"Con base en la siguiente descripción del perro ideal: {descripcion}, "
             "proporciona una lista de al menos 4 razas de perros en el siguiente formato JSON:\n"
@@ -40,21 +40,21 @@ def obtener_razas(descripcion):
             "]\n"
             "Por favor, asegúrate de incluir detalles sobre el tamaño, el tipo de pelo, el temperamento, el mantenimiento, el nivel de actividad y los cuidados necesarios para cada raza."
         )
-        print(f"Prompt enviado a Gemini: {prompt}")  # Imprime el prompt para depuración
+        print(f"Prompt enviado a Gemini: {prompt}")  # Se imprime el prompt para depuracion
         response = model.generate_content(prompt)
-        print(response)  # Imprime la estructura completa de la respuesta para depuración
+        print(response)  # Se imprime la estructura completa de la respuesta para depuración
 
         if not response.candidates:
             raise ValueError("No candidates returned from the model.")
 
-        # Accede correctamente al contenido dentro de 'parts'
+        # Se accede correctamente al contenido dentro de 'parts'
         texto_respuesta = response.candidates[0].content.parts[0].text.strip()
 
-        # Extraer el JSON del bloque de código Markdown, si es necesario
+        # Extraemos el JSON del bloque de codigo Markdown, si es necesario
         if texto_respuesta.startswith('```') and texto_respuesta.endswith('```'):
             texto_respuesta = texto_respuesta.strip('``` JSON\n').strip('```')
 
-        # Verifica si la respuesta contiene información válida en formato JSON
+        # Verificamos si la respuesta contiene información valida en formato JSON
         try:
             razas_recomendadas = json.loads(texto_respuesta)
         except json.JSONDecodeError:
@@ -95,9 +95,9 @@ def obtener_imagen_perro(raza):
         url = f"https://www.googleapis.com/customsearch/v1?q={query}&searchType=image&key={settings.GOOGLE_API_KEY}&cx={settings.GOOGLE_CX}"
         response = requests.get(url)
         data = response.json()
-        print(data)  # Depuración: Imprime los datos obtenidos de Google Custom Search
+        print(data)  # Depuracion: Imprimimos los datos obtenidos de Google Custom Search
         if 'items' in data:
-            return data['items'][0]['link']  # Devuelve el enlace de la primera imagen
+            return data['items'][0]['link']  # Depuracion: Devolvemos el enlace de la primera imagen
         return ''
     except Exception as e:
         print(f"Error obteniendo la imagen de la raza: {raza}. Error: {e}")
